@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+    <title>Dashboard | Melon</title>
+    {% include "admin/layout/head.html" %}
+    <style>
+        .tpwidget_title_hook,.tpwidget_text_hook{
+            color: #000000 !important;
+        }
+    </style>
+  <body>
+    <!-- WRAPPER -->
+    <div id="wrapper">
+
+            <!-- NAVBAR -->
+            <nav class="navbar navbar-default navbar-fixed-top">
+                <div class="brand">
+                    <a href="{{ url_for('admin.index') }}">
+                        <img src="{{ url_for('static',filename='admin/img/logo-dark2.png') }}" alt="Klorofil Logo" class="img-responsive logo">
+                    </a>
+                </div>
+                <div class="container-fluid">
+                    <div class="navbar-btn main-operate-btns">
+                       <a data-href="{{ url_for('admin.main') }}" class="active main-operate-btn">
+                            <i class="lnr lnr-home"></i>
+                            <span>Blogs</span>
+                        </a>
+                        <a data-href="{{ url_for('admin.write') }}" class="main-operate-btn">
+                            <i class="lnr lnr-pencil"></i>
+                            <span>Write</span>
+                        </a>
+                         <a data-href="{{ url_for('admin.albums') }}" class="main-operate-btn">
+                            <i class="lnr lnr-magic-wand"></i>
+                            <span>Albums</span>
+                         </a>
+                        {% if session.get('admin_id') == 1 %}
+                             <a data-href="{{ url_for('admin.banners') }}" class="main-operate-btn">
+                                <i class="lnr lnr-map"></i>
+                                <span>Banners</span>
+                             </a>
+                             <a data-href="{{ url_for('admin.recommend') }}" class="main-operate-btn">
+                                <i class="lnr lnr-thumbs-up"></i>
+                                <span>Recommend</span>
+                             </a>
+                             <a data-href="{{ url_for('admin.tags') }}" class="main-operate-btn">
+                                <i class="lnr lnr-bookmark"></i>
+                                <span>Tags</span>
+                             </a>
+                            <a data-href="{{ url_for('admin.users') }}" class="main-operate-btn">
+                                <i class="lnr lnr-user"></i>
+                                <span>Users</span>
+                             </a>
+                             <a data-href="{{ url_for('admin.webconfig') }}" class="main-operate-btn">
+                                <i class="lnr lnr-cog"></i>
+                                <span>Config</span>
+                             </a>
+                        {% endif %}
+
+                    </div>
+
+                    <div id="navbar-menu">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown">
+                                <!-- 天气信息 -->
+                                <div id="tp-weather-widget" style="padding:28px 20px;"></div>
+                        <script>(function (T, h, i, n, k, P, a, g, e) {
+                                g = function () {
+                                    P = h.createElement(i);
+                                    a = h.getElementsByTagName(i)[0];
+                                    P.src = k;
+                                    P.charset = "utf-8";
+                                    P.async = 1;
+                                    a.parentNode.insertBefore(P, a)
+                                };
+                                T["ThinkPageWeatherWidgetObject"] = n;
+                                T[n] || (T[n] = function () {
+                                    (T[n].q = T[n].q || []).push(arguments)
+                                });
+                                T[n].l = +new Date();
+                                if (T.attachEvent) {
+                                    T.attachEvent("onload", g)
+                                } else {
+                                    T.addEventListener("load", g, false)
+                                }
+                            }(window, document, "script", "tpwidget", "/static/admin/scripts/widget.js"))</script>
+                            <script>tpwidget("init", {
+                                    "flavor": "slim",
+                                    "location": "WX4FBXXFKE4F",
+                                    "geolocation": "enabled",
+                                    "language": "zh-chs",
+                                    "unit": "c",
+                                    "theme": "chameleon",
+                                    "container": "tp-weather-widget",
+                                    "bubble": "disabled",
+                                    "alarmType": "badge",
+                                    "color": "#FFFFFF",
+                                    "uid": "U9EC08A15F",
+                                    "hash": "039da28f5581f4bcb5c799fb4cdfb673"
+                                });
+                                tpwidget("show");</script>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+{#                                    <img src="assets/img/user.png" class="img-circle" alt="Avatar">#}
+                                    <span>{{ session.admin }}</span>
+                                    <i class="icon-submenu lnr lnr-chevron-down"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a data-href="{{ url_for('admin.cgPwd') }}" class="main-operate-btn">
+                                            <i class="lnr lnr-cog"></i>
+                                            <span>Settings</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url_for('admin.logout') }}" class="main-operate-btn">
+                                            <i class="lnr lnr-exit"></i>
+                                            <span>Logout</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <iframe class="main main-iframe" src="{{ url_for('admin.main') }}"></iframe>
+
+            {% include "admin/layout/footer.html" %}
+
+    </div>
+
+    <!-- Javascript -->
+	<script src="{{ url_for('static',filename='admin/scripts/klorofil-common.js') }}"></script>
+    <script>
+        $(".main-operate-btn").click(function(){
+            $(".main-operate-btn").removeClass('active');
+            $(this).addClass('active');
+            var src = $(this).data('href');
+            $(".main-iframe").attr('src',src);
+        })
+    </script>
+
+  </body>
+</html>

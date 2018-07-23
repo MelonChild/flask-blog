@@ -1,0 +1,81 @@
+{% extends "admin/layout/base.html" %}
+{% import "index/pages/time_page.html" as pg %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row margin-top-10">
+            <div class="col-md-12">
+                <a href="{{ url_for('admin.albumsAdd') }}" class="btn btn-primary write-title form-submit">Create</a>
+            </div>
+            <div class="col-md-4">
+            {% for error in get_flashed_messages(category_filter=["ok"]) %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <i class="fa fa-check-circle"></i> {{ error }} &nbsp;
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            {% for item in albums.items %}
+                <div class="col-md-4">
+                    <!-- PANEL NO PADDING -->
+                    <div class="panel">
+                        <div class = "slimScrollDiv">
+                            <div class="panel-body no-padding bg-primary text-center">
+                                <div class="">
+                                        <img src="{{ url_for('static',filename=item.picture) }}" class="activity-icon blog-img" >
+                                        <p class="blog-content">【{{ item.like_num }}】【{{ item.title }}】</p>
+                                </div>
+                            </div>
+                            <div class="panel-footer demo-button">
+                                <a href="{{ url_for('admin.albumsEdit',id=item.id) }}" class="btn btn-warning operate-btn"><i class="fa fa-warning"></i> Edit</a>
+                                <button type="button" class="btn btn-danger delete-btn" data-id="{{ item.id }}"><i class="fa fa-trash-o"></i> Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PANEL NO PADDING -->
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row pagination">
+            {{ pg.page(albums,'admin.albums') }}
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        $(".delete-btn").click(function(){
+            var id = $(this).data('id');
+            var _this = $(this)
+            layer.confirm('确定要删除吗？', {
+              btn: ['删了','取消'] //按钮
+            }, function(){
+                 $.ajax({
+                       type:"POST",
+                       url:"/melon/albums/delete",
+                       data:{id:id},
+                       dataType: "json",
+                       success: function(data){
+                           console.log(data)
+                           if(data.status){
+                               _this.parents('.panel').remove()
+                               layer.closeAll();
+                               layer.msg("删除成功！");
+                               setInterval(function(){
+                                  location.href = location.href;
+                                  }, 2000);
+                           } else {
+                               layer.msg(data.error)
+                           }
+                       }
+                    })
+            }, function(){
+
+            });
+        })
+    </script>
+{%  endblock %}

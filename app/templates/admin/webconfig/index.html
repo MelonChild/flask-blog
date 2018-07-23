@@ -1,0 +1,456 @@
+{% extends "admin/layout/base.html" %}
+
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='admin/css/cropper.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='admin/css/ImgCropping.css') }}">
+{% endblock %}
+
+{% block content %}
+     {% for error in get_flashed_messages(category_filter=["ok"]) %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <i class="fa fa-check-circle"></i> {{ error }} &nbsp;
+        </div>
+    {% endfor %}
+    {% for error in get_flashed_messages(category_filter=["err"]) %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <i class="fa fa-times-circle"></i> {{ error }} &nbsp;
+        </div>
+    {% endfor %}
+
+    <div class="panel panel-profile web-profile" style="min-height: 500px;">
+        <div class="clearfix">
+            <!-- LEFT COLUMN -->
+            <div class="profile-left">
+                <!-- PROFILE HEADER -->
+                <div class="profile-header">
+                    <div class="overlay"></div>
+                    <div class="profile-main">
+                        <img src="{{ url_for('static',filename=web.avatar) }}" style="max-width: 100px;" class="img-circle" alt="Avatar">
+                        <h3 class="name">{{ web.author }}</h3>
+                        <br>
+                        <span class="online-status status-available">{{ web.position }}</span>
+                    </div>
+                </div>
+                <!-- END PROFILE HEADER -->
+                <!-- PROFILE DETAIL -->
+                <div class="profile-detail">
+                    <div class="profile-info">
+                        <p>{{ web.summary }}</p>
+                    </div>
+                    <div class="text-center">
+                        <a href="#" class="btn btn-primary btn-show" data-value="1">Edit Profile</a>
+                        <a href="#" class="btn btn-success btn-show" data-value="3">About me</a>
+                    </div>
+                </div>
+                <!-- END PROFILE DETAIL -->
+            </div>
+            <!-- END LEFT COLUMN -->
+            <!-- RIGHT COLUMN -->
+            <div class="profile-right">
+
+                <div class="profile-info">
+                    <h4 class="heading">Basic Info</h4>
+                    <ul class="list-unstyled list-justify">
+                        <li>网站名 <span>{{ web.webname }}</span></li>
+                        <li>描述 <span>{{ web.description }}</span></li>
+                        <li>关键词 <span>{{ web.keywords }}</span></li>
+                        <li>名言 <span>{{ web.inscription }}</span></li>
+                        <li>名言_2 <span>{{ web.inscription_2 }}</span></li>
+                        <li>名言_3 <span>{{ web.inscription_3 }}</span></li>
+                        <li>名言_4 <span>{{ web.inscription_4 }}</span></li>
+                    </ul>
+                </div>
+                 <div class="profile-info">
+                    <h4 class="heading">Wechat</h4>
+                    <img src="{{ url_for('static',filename=web.wechat) }}" style="width: 200px;" alt="wechat">
+                </div>
+                <!-- END TABBED CONTENT -->
+            </div>
+            <!-- END RIGHT COLUMN -->
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="about-form" style="display: none">
+        <div class="row">
+             <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">About me</h3>
+                    </div>
+                    <div class="panel-body">
+                        <textarea class="form-control about-content" id="content" name="content" rows="4">{{ page.content|safe }}</textarea>
+                        <br><br>
+                    </div>
+                     <div class="panel-footer">
+                        <button type="button" class="btn btn-primary btn-about">Submit</button>
+                        <button type="button" class="btn btn-default btn-show" data-value="2">Cancel</button>
+                    </div>
+                </div>
+           </div>
+        </div>
+    </div>
+
+    <div class="web-form" style="min-height: 400px; display: none">
+        <div class="row">
+            <form method="post">
+                <div class="col-md-6">
+                   <div class="panel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Edit Profile</h3>
+                        </div>
+                        <div class="panel-body">
+
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">昵称</span>
+                                    {{ form.author }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">职业</span>
+                                    {{ form.position }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">简介</span>
+                                    {{ form.summary }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">头像地址</span>
+                                    {{ form.avatar }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">微信地址</span>
+                                    {{ form.wechat }}
+                                </div>
+                                <br>
+
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="col-md-12">
+                                <h3 class="page-title write-title">Pictures</h3>
+                                <a id="replaceImg" class="btn btn-success write-title">Choose Images</a>
+                            </div>
+                            <input type="hidden" name="images" value="" class="setImages">
+                        </div>
+                        <div class="panel-body"  id="image-div">
+                            <div class="input-group">
+                                <img src="/static/{{ web.avatar }}" class="activity-icon create-img" >
+                                <a class="btn btn-danger delete-btn" data-value="{{ web.avatar }}"><i class="fa fa-trash-o"></i> Delete</a>
+                                <h4>path ：{{ web.avatar }}</h4>
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <img src="/static/{{ web.wechat }}" class="activity-icon create-img" >
+                                <a class="btn btn-danger delete-btn" data-value="{{ web.wechat }}"><i class="fa fa-trash-o"></i> Delete</a>
+                                <h4>path ：{{ web.wechat }}</h4>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+
+                </div>
+                 <div class="col-md-6">
+                   <div class="panel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">web</h3>
+                        </div>
+                        <div class="panel-body">
+
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">网站名</span>
+                                    {{ form.webname }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">关键词</span>
+                                    {{ form.keywords }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">描述</span>
+                                    {{ form.description }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">名言1</span>
+                                    {{ form.inscription }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">名言2</span>
+                                    {{ form.inscription_2 }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">名言3</span>
+                                    {{ form.inscription_3 }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">名言4</span>
+                                    {{ form.inscription_4 }}
+                                </div>
+                                <br>
+
+
+                                <div class="input-group">
+                                    {{ form.csrf_token }}
+                                    {{ form.submit }}
+                                    <button type="button" class="btn btn-default btn-show" data-value="2">Cancel</button>
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
+             </form>
+        </div>
+    </div>
+ <!--图片裁剪框 start-->
+<div style="display: none" class="tailoring-container">
+    <div class="black-cloth" onClick="closeTailor(this)"></div>
+    <div class="tailoring-content">
+            <div class="tailoring-content-one">
+                <label title="上传图片" for="chooseImg" class="l-btn choose-btn">
+                    <input type="file" accept="image/jpg,image/jpeg,image/png" name="file" id="chooseImg" class="hidden" onChange="selectImg(this)">
+                    选择图片
+                </label>
+                <div class="close-tailoring"  onclick="closeTailor(this)">×</div>
+            </div>
+            <div class="tailoring-content-two">
+                <div class="tailoring-box-parcel">
+                    <img id="tailoringImg">
+                </div>
+                <div class="preview-box-parcel">
+                    <p>图片预览：</p>
+                    <div class="square previewImg"></div>
+                    <div class="circular previewImg"></div>
+                </div>
+            </div>
+            <div class="tailoring-content-three">
+                <button class="l-btn cropper-reset-btn">复位</button>
+                <button class="l-btn cropper-rotate-btn">旋转</button>
+                <button class="l-btn cropper-scaleX-btn">换向</button>
+                <button class="l-btn sureCut" id="sureCut">确定</button>
+            </div>
+        </div>
+</div>
+<!--图片裁剪框 end-->
+{% endblock %}
+{% block script %}
+    <script src="{{ url_for('static',filename='admin/js/cropper.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='admin/ckeditor5/ckeditor.js') }}"></script>
+    <script>
+        var theEditor;
+        ClassicEditor.create( document.querySelector( '#content' ),{
+             ckfinder: {
+                uploadUrl: '/melon/ckupload'
+            }
+        } ).then(function(editor){
+            theEditor = editor
+        }).catch( function(error){
+                console.error( error );
+            } );
+
+         $(".btn-about").click(function(){
+            var editorcontent = theEditor.getData();
+             $.ajax({
+                   type:"POST",
+                   url:"/melon/savePage",
+                   data:{content:editorcontent},
+                   dataType: "json",
+                   success: function(data){
+                       console.log(data)
+                       if(data.status){
+                           layer.closeAll();
+                           layer.msg("success！");
+                           $(".about-form").hide();
+                           $(".web-form").hide();
+                           $(".web-profile").show();
+                       } else {
+                           layer.msg(data.error)
+                       }
+                   }
+                })
+        })
+
+
+        $(".btn-show").click(function(){
+            var value = $(this).data('value')
+            if(value==1){
+                $(".web-profile").hide();
+                $(".about-form").hide();
+                $(".web-form").show();
+            } else if(value==2) {
+                $(".web-profile").show();
+                $(".web-form").hide();
+                $(".about-form").hide();
+            }else if(value==3) {
+                $(".web-profile").hide();
+                $(".web-form").hide();
+                $(".about-form").show();
+            }
+        })
+
+        //弹出框水平垂直居中
+        window.onresize = function () {
+           cropDiv();
+        };
+
+        function cropDiv(){
+            var win_height = $(window).height();
+            var win_width = $(window).width();
+            if (win_width <= 768){
+                $(".tailoring-content").css({
+                    "top": (win_height - $(".tailoring-content").outerHeight())/2,
+                    "left": 0
+                });
+            }else{
+                $(".tailoring-content").css({
+                    "top": (win_height - $(".tailoring-content").outerHeight())/2,
+                    "left": (win_width - $(".tailoring-content").outerWidth())/2
+                });
+            }
+        }
+
+        cropDiv()
+
+         //弹出图片裁剪框
+        $("#replaceImg").click(function () {
+            $(".tailoring-container").toggle();
+        });
+
+        //图像上传
+        function selectImg(file) {
+            if (!file.files || !file.files[0]){
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                var replaceSrc = evt.target.result;
+                //更换cropper的图片
+                $('#tailoringImg').cropper('replace', replaceSrc,false);//默认false，适应高度，不失真
+            }
+            reader.readAsDataURL(file.files[0]);
+        }
+        //cropper图片裁剪
+        $('#tailoringImg').cropper({
+            aspectRatio: 1/1,//默认比例
+            preview: '.previewImg',//预览视图
+            guides: true,  //裁剪框的虚线(九宫格)
+            autoCropArea: 0.8,  //0-1之间的数值，定义自动剪裁区域的大小，默认0.8
+            movable: false, //是否允许移动图片
+            dragCrop: true,  //是否允许移除当前的剪裁框，并通过拖动来新建一个剪裁框区域
+            movable: true,  //是否允许移动剪裁框
+            resizable: true,  //是否允许改变裁剪框的大小
+            zoomable: false,  //是否允许缩放图片大小
+            mouseWheelZoom: false,  //是否允许通过鼠标滚轮来缩放图片
+            touchDragZoom: true,  //是否允许通过触摸移动来缩放图片
+            rotatable: true,  //是否允许旋转图片
+            crop: function(e) {
+                // 输出结果数据裁剪图像。
+            }
+        });
+        //旋转
+        $(".cropper-rotate-btn").on("click",function () {
+            $('#tailoringImg').cropper("rotate", 45);
+        });
+        //复位
+        $(".cropper-reset-btn").on("click",function () {
+            $('#tailoringImg').cropper("reset");
+        });
+        //换向
+        var flagX = true;
+        $(".cropper-scaleX-btn").on("click",function () {
+            if(flagX){
+                $('#tailoringImg').cropper("scaleX", -1);
+                flagX = false;
+            }else{
+                $('#tailoringImg').cropper("scaleX", 1);
+                flagX = true;
+            }
+            flagX != flagX;
+        });
+
+    //裁剪后的处理
+    $("#sureCut").click(function () {
+        if ($("#tailoringImg").attr("src") == null ){
+            return false;
+        }else{
+            var cas = $('#tailoringImg').cropper('getCroppedCanvas');//获取被裁剪后的canvas
+            var base64url = cas.toDataURL('image/png'); //转换为base64地址形式
+            //上传base64
+           $.ajax({
+               type:"POST",
+               url:"/melon/upload",
+               data:{datas:base64url},
+               dataType: "json",
+               success: function(data){
+                   console.log(data)
+                   if(data.uploaded){
+                       var html = '<div class="input-group">\
+                            <img src="/static/'+ data.url + '" class="activity-icon create-img" >\
+                            <a class="btn btn-danger delete-btn" data-value="'+ data.url + '"><i class="fa fa-trash-o"></i> Delete</a>\
+                            <h4>path ：' + data.url + '</h4>\
+                        </div>\
+                        <br>';
+                       $("#image-div").append(html)
+                       var images = $(".setImages").val();
+                       $(".setImages").val(images+data.url+';')
+                   }
+                    //关闭裁剪框
+                    closeTailor();
+               }
+           })
+        }
+    });
+    //关闭裁剪框
+    function closeTailor() {
+        $(".tailoring-container").toggle();
+    }
+
+    //删除图片
+    $("body").on('click','.delete-btn',function(){
+        console.log($(this).attr('data-value'))
+        var img = $(this).attr('data-value')
+        var _this = $(this)
+        $.ajax({
+               type:"POST",
+               url:"/melon/deleteImg",
+               data:{img:img},
+               dataType: "json",
+               success: function(data){
+                   console.log(data)
+                   if(data.status){
+
+                   } else {
+                       layer.msg(data.error)
+                   }
+                    _this.parent('div').remove()
+                       var images = $(".setImages").val();
+                       $(".setImages").val(images.replace(img+';', ""))
+                       console.log(images,images.replace(img+';', ""));
+               }
+           })
+    })
+    </script>
+{% endblock %}

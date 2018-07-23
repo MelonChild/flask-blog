@@ -1,0 +1,35 @@
+{% macro page(data,nav,url) -%}
+     {% if data and data.pages>1 %}
+
+            {% if data.pages>10 %}
+
+                <a title="Total record" href="{{ url_for(url,nav=nav,page=1) }}"><b>首页</b></a>
+
+                {% if data.has_prev %}
+                    <a href="{{ url_for(url,nav=nav,page=data.prev_num) }}">上一页</a>
+                {% endif %}
+
+            {% endif %}
+
+            {% for v in data.iter_pages() %}
+                {% if v %}
+                    {% if v == data.page %}
+                         &nbsp;&nbsp;&nbsp;<b>{{ v }}</b>
+                    {% else %}
+                        <a href="{{ url_for(url,nav=nav,page=v) }}">{{ v }}</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% if data.pages>10 %}
+                {% if data.has_next %}
+                    <a href="{{ url_for(url,nav=nav,page=data.next_num) }}">下一页</a>
+                {% endif %}
+
+                <a href="{{ url_for(url,nav=nav,page=data.pages) }}">尾页</a>
+
+            {% endif %}
+
+    {% endif %}
+{% endmacro %}
+

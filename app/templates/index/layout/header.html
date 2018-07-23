@@ -1,0 +1,46 @@
+<header>
+  <!--menu begin-->
+  <div class="menu">
+    <nav class="nav" id="topnav">
+      <h1 class="logo"><a href="{{ url_for('home.index') }}">Melon</a></h1>
+      {% for nav in navs() %}
+          <li><a href="{{ nav.path }}">{{ nav.name }}</a>
+             <ul class="sub-nav">
+              {% for child in nav.children %}
+                 <li><a href="{{ nav.path }}">{{ child.name }}</a></li>
+              {% endfor %}
+             </ul>
+          </li>
+      {% endfor %}
+
+
+      <!--search begin-->
+      <div id="search_bar" class="search_bar">
+        <form  id="searchform" action="{{ url_for('home.search') }}" method="get" name="searchform">
+          <input class="input" placeholder="想搜点什么呢..." type="text" name="keywords" id="keyboard">
+          <span class="search_ico"></span>
+        </form>
+      </div>
+      <!--search end-->
+    </nav>
+  </div>
+  <!--menu end-->
+  <!--mnav begin-->
+  <div id="mnav">
+    <h2><a href="http://www.yangqq.com" class="mlogo">Melon</a><span class="navicon"></span></h2>
+    <dl class="list_dl">
+        {% for nav in navs() %}
+          <dt class="list_dt">
+              <a {% if  nav.children|length == 0 %} href="{{ nav.path }}" {% endif %}>{{ nav.name }}</a></dt>
+             <dd class="list_dd">
+                <ul>
+                  {% for child in nav.children %}
+                     <li><a href="{{ nav.path }}">{{ child.name }}</a></li>
+                  {% endfor %}
+                 </ul>
+             </dd>
+        {% endfor %}
+    </dl>
+  </div>
+  <!--mnav end-->
+</header>

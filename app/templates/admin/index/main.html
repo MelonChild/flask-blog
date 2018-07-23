@@ -1,0 +1,88 @@
+{% extends "admin/layout/base.html" %}
+{% import "index/pages/time_page.html" as pg %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row margin-top-10">
+
+            <div class="col-md-4">
+            {% for error in get_flashed_messages(category_filter=["ok"]) %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <i class="fa fa-check-circle"></i> {{ error }} &nbsp;
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            {% for article in articles.items %}
+                <div class="col-md-4">
+                    <!-- PANEL NO PADDING -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{% if article.active<1 %}【草稿】{% endif %}【{{ article.nav.name}}】{{ article.title }}</h3>
+                            <div class="right">
+                                <button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class = "slimScrollDiv"  style="display: none;">
+                            <div class="panel-body no-padding bg-primary text-center">
+                                <div class="">
+                                        {% set imagesall = article.images.split(';') %}
+                                        {% if imagesall|length>0 %}
+                                             <img src="{{ url_for('static',filename=imagesall[0]) }}" class="activity-icon blog-img" >
+                                         {% else %}
+                                         {% endif %}
+                                        <p class="blog-content">【{{ article.author }}】【{{ article.created_at|datetime }}】{{ article.description }}</p>
+                                </div>
+                            </div>
+                            <div class="panel-footer demo-button">
+                                <a class="btn btn-success operate-btn" href="{{ url_for('home.blog',id=article.id) }}" target="_blank"><i class="fa fa-check-circle"></i> View</a>
+                                <a href="{{ url_for('admin.edit',id=article.id) }}" class="btn btn-warning operate-btn"><i class="fa fa-warning"></i> Edit</a>
+                                <button type="button" class="btn btn-danger delete-btn" data-id="{{ article.id }}"><i class="fa fa-trash-o"></i> Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PANEL NO PADDING -->
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row pagination">
+            {{ pg.page(articles,'admin.main') }}
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        $(".delete-btn").click(function(){
+            var id = $(this).data('id');
+            var _this = $(this)
+            layer.confirm('确定要删除该文章吗？', {
+              btn: ['删了','取消'] //按钮
+            }, function(){
+                 $.ajax({
+                       type:"POST",
+                       url:"/melon/deleteArticle",
+                       data:{id:id},
+                       dataType: "json",
+                       success: function(data){
+                           console.log(data)
+                           if(data.status){
+                               _this.parents('.panel').remove()
+                               layer.closeAll();
+                               layer.msg("删除成功！");
+                               setInterval(function(){
+                                   location.href = location.href;
+                                  }, 2000);
+                           } else {
+                               layer.msg(data.error)
+                           }
+                       }
+                    })
+            }, function(){
+
+            });
+        })
+    </script>
+{%  endblock %}

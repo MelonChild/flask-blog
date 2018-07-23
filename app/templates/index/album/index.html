@@ -1,0 +1,55 @@
+{% extends "index/layout/base.html" %}
+{% import "index/pages/time_page.html" as pg %}
+
+{% block content %}
+<div class="pagebg ab"> </div>
+<div class="container">
+  <h1 class="t_nav"><span>{{ webconfig().inscription_2 }}</span><a href="{{ url_for('home.index') }}" class="n1">首页</a><a href="#" class="n2">图集</a></h1>
+  <div class="share">
+      <ul>
+          {% for album in albums.items %}
+               <li>
+                   <div class="shareli">
+                       <a class="showalbum" data-value="{{ album.id }}">
+                            <i><img src="{{ url_for('static',filename=album.picture) }}"></i>
+                            <h2><b>{{ album.title }}</b></h2>
+                       </a>
+                       <a class="like" data-value="{{ album.id }}">喜欢 | <span class="likenum">{{ album.like_num }}</span></a>
+                   </div>
+               </li>
+          {% endfor %}
+      </ul>
+       <div class="pagelist">
+        {{ pg.page(albums,'home.albums') }}
+      </div>
+  </div>
+</div>
+    <div id="follow-us"></div>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static',filename='layer/layer.js') }}"></script>
+    <script>
+    $(function(){
+        $(".showalbum").click(function () {
+            //相册层
+            var id = $(this).data('value');
+            $.getJSON("{{ url_for('home.album') }}"+'/'+id, function(json){
+              layer.photos({
+                photos: json //格式见API文档手册页
+                ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机
+              });
+            });
+        })
+
+        $(".like").click(function () {
+            //喜欢
+            var theid = $(this).data('value');
+            $.getJSON("{{ url_for('home.likealbum') }}"+'/'+theid, function(json){
+                console.log(parseInt($(".likenum").text()),parseInt($(".likenum").text())+1)
+              $(".likenum").text(parseInt($(".likenum").text())+1)
+            });
+        })
+    })
+    </script>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "index/layout/base.html" %}
+
+{% block content %}
+    <article>
+          <!--banner begin-->
+         <div class="picsbox">
+          <div class="banner">
+            <div id="banner" class="fader">
+                {% for banner in banners %}
+                    {% if banner.type==1 %}
+                        <li class="slide" ><a href="{{ banner.path }}" target="_blank"><img src="{{ url_for('static',filename=banner.picurl) }}"><span class="imginfo">{{ banner.title }}</span></a></li>
+                    {% endif %}
+                {% endfor %}
+              <div class="fader_controls">
+                <div class="page prev" data-target="prev">&lsaquo;</div>
+                <div class="page next" data-target="next">&rsaquo;</div>
+                <ul class="pager_list">
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!--banner end-->
+          <div class="toppic">
+              {% for banner in banners %}
+                    {% if banner.type==2 %}
+                        <li>
+                            <a href="/" target="_blank">
+                                <i><img src="{{ url_for('static',filename=banner.picurl) }}"></i>
+                                <h2>{{ banner.title }}</h2>
+                                <span>{{ banner.tag }}</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+          </div>
+          </div>
+          <div class="blank"></div>
+          <!--blogsbox begin-->
+          <div class="blogsbox">
+              {% for article in articles %}
+                 <div class="blogs" data-scroll-reveal="enter bottom over 1s" >
+                      <h3 class="blogtitle"><a href="{{ url_for('home.blog',id=article.id) }}" target="_blank">{{ article.title }}</a></h3>
+                     {% set imagesall = article.images.split(';') %}
+                     {% if imagesall|length>2 %}
+                         <span class="bplist">
+                            <a href="{{ url_for('home.blog',id=article.id) }}" title="">
+                                {% for image in imagesall %}
+                                    <li><img src="{{ url_for('static',filename=image) }}" alt=""></li>
+                                {% endfor %}
+                            </a>
+                         </span>
+                     {% elif imagesall|length>0 and imagesall[0] %}
+                          <span class="blogpic">
+                              <a href="{{ url_for('home.blog',id=article.id) }}" title="">
+                                <img src="{{ url_for('static',filename=imagesall[0]) }}" alt="">
+                              </a>
+                          </span>
+                     {% else %}
+                     {% endif %}
+
+                      <p class="blogtext">{{ article.description }}</p>
+                      <div class="bloginfo">
+                        <ul>
+                          <li class="author"><a href="{{ url_for('home.blog',id=article.id) }}">{{ article.author }}</a></li>
+                          <li class="lmname"><a href="{{ url_for('home.blogs',nav=article.nav_id) }}">{{ article.nav.name}}</a></li>
+                          <li class="timer">{{ article.created_at|datetime }}</li>
+                          <li class="view"><span>{{ article.views_num }}</span>人已阅读</li>
+                        </ul>
+                      </div>
+                </div>
+              {% endfor %}
+          </div>
+          <!--blogsbox end-->
+          <div class="sidebar">
+            {% include "index/layout/right.html" %}
+          </div>
+        </article>
+{% endblock %}

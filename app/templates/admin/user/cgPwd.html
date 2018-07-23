@@ -1,0 +1,81 @@
+{% extends "admin/layout/base.html" %}
+{% import "index/pages/time_page.html" as pg %}
+
+{% block content %}
+        <div class="row">
+                <div class="col-md-6">
+                   <div class="panel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">修改密码</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form method="post">
+                                 {% for error in get_flashed_messages(category_filter=["ok"]) %}
+                                    <div class="alert alert-success alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <i class="fa fa-check-circle"></i> {{ error }} &nbsp;
+                                    </div>
+                                {% endfor %}
+                                {% for error in get_flashed_messages(category_filter=["err"]) %}
+                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <i class="fa fa-times-circle"></i> {{ error }} &nbsp;
+                                    </div>
+                                {% endfor %}
+                                {% for error in form.old_pwd.errors %}
+                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <i class="fa fa-times-circle"></i> {{ error }} &nbsp;
+                                    </div>
+                                {% endfor %}
+                                {% for error in form.password.errors %}
+                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <i class="fa fa-times-circle"></i> {{ error }} &nbsp;
+                                    </div>
+                                {% endfor %}
+                                {% for error in form.repwd.errors %}
+                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <i class="fa fa-times-circle"></i> {{ error }} &nbsp;
+                                    </div>
+                                {% endfor %}
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                    {{ form.nickname }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                    {{ form.old_pwd }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">Password</span>
+                                    {{ form.password }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">Confirm Password</span>
+                                    {{ form.repwd }}
+                                </div>
+                                <br>
+
+                                <div class="input-group">
+                                    {{ form.csrf_token }}
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+        </div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+
+    </script>
+{%  endblock %}

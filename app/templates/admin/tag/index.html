@@ -1,0 +1,121 @@
+{% extends "admin/layout/base.html" %}
+{% import "index/pages/time_page.html" as pg %}
+
+{% block content %}
+        <div class="row margin-top-10">
+            <div class="col-md-6">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Tags</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Sort</th>
+                                    <th>Operation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for tag in tags %}
+                                <tr>
+                                    <td>{{ tag.id }}</td>
+                                    <td>{{ tag.title }}</td>
+                                    <td>{{ tag.sort }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning edit-btn" data-id="{{ tag.id }}" data-title="{{ tag.title }}" data-sort="{{ tag.sort }}"><i class="fa fa-warning"></i> Edit</button>
+                                        <button type="button" class="btn btn-danger delete-btn" data-id="{{ tag.id }}"><i class="fa fa-trash-o"></i> Delete</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END BASIC TABLE -->
+            </div>
+            <div class="col-md-6">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Create / Edit</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form method="POST">
+                            <input type="hidden" value="{{ csrf_token() }}" name="csrf_token">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button">ID</button>
+                                </span>
+                                <input class="form-control edit-id" type="text" name="id" value="" placeholder="新增请置空">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button">Title</button>
+                                </span>
+                                <input class="form-control edit-title" required type="text" name="title" value="" placeholder="请输入标签">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button">Sort</button>
+                                </span>
+                                <input class="form-control edit-sort" required type="text" name="sort" value="1" placeholder="请输入排序值">
+                            </div>
+                            <br>
+
+                            <button type="submit" class="btn btn-primary"> Submit</button>
+                            <br>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        $(".delete-btn").click(function(){
+            var id = $(this).data('id');
+            var _this = $(this)
+            layer.confirm('确定要删除吗？', {
+              btn: ['删了','取消'] //按钮
+            }, function(){
+                 $.ajax({
+                       type:"POST",
+                       url:"/melon/tags/delete",
+                       data:{id:id},
+                       dataType: "json",
+                       success: function(data){
+                           console.log(data)
+                           if(data.status){
+                               _this.parents('.panel').remove()
+                               layer.closeAll();
+                               layer.msg("删除成功！");
+                               setInterval(function(){
+                                   location.href = location.href;
+                                  }, 2000);
+                           } else {
+                               layer.msg(data.error)
+                           }
+                       }
+                    })
+            }, function(){
+
+            });
+        })
+    $(".edit-btn").click(function(){
+         var id = $(this).data('id');
+         var title = $(this).data('title');
+         var sort = $(this).data('sort');
+         $(".edit-id").val(id)
+        $(".edit-title").val(title)
+        $(".edit-sort").val(sort)
+    })
+    </script>
+{%  endblock %}

@@ -1,0 +1,19 @@
+{% extends "index/layout/base.html" %}
+{% import "index/pages/time_page.html" as pg %}
+
+{% block content %}
+<div class="pagebg ab"> </div>
+<div class="container">
+  <h1 class="t_nav"><span>{{ webconfig().inscription_2 }}</span><a href="{{ url_for('home.index') }}" class="n1">首页</a><a href="#" class="n2">时间轴</a></h1>
+  <div class="timebox">
+      <ul id="list">
+          {% for article in articles.items %}
+              <li><span>{{ article.created_at|datetime }}</span><a href="{{ url_for('home.blog',id=article.id) }}" title="{{ article.title }}">{{ article.title }}</a></li>
+          {% endfor %}
+      </ul>
+       <div class="pagelist">
+        {{ pg.page(articles,'home.timeline') }}
+      </div>
+  </div>
+</div>
+{% endblock %}

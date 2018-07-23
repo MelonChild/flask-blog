@@ -1,0 +1,83 @@
+{% extends "admin/layout/base.html" %}
+{% import "index/pages/time_page.html" as pg %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{ url_for('admin.userCreate') }}" class="btn btn-primary"><i class="fa fa-plus-square"></i> 创建用户 </a><br>
+                <div class="row">
+                     {% for ok in get_flashed_messages(category_filter=["ok"]) %}
+                         <div class="col-md-4">
+                            <div class="alert alert-success alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                <i class="fa fa-check-circle"></i> {{ ok }} &nbsp;
+                            </div>
+                         </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    <br>
+        <div class="row">
+            {% for user in users.items %}
+                <div class="col-md-4">
+                    <!-- PANEL NO PADDING -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">【{{ user.role_id}}】{{ user.nickname }}</h3>
+                            <div class="right">
+                                <button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-down"></i></button>
+                            </div>
+                        </div>
+                        <div class = "slimScrollDiv"  style="display: none;">
+                            <div class="panel-footer demo-button">
+                                <a class="btn btn-success operate-btn" href="{{ url_for('admin.main') }}?user={{ user.id}}" target="_blank"><i class="fa fa-check-circle"></i> 文章</a>
+                                <a href="{{ url_for('admin.userEdit',id=user.id) }}" class="btn btn-warning operate-btn"><i class="fa fa-warning"></i> Edit</a>
+                                <button type="button" class="btn btn-danger delete-btn" data-id="{{ user.id }}"><i class="fa fa-trash-o"></i> Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PANEL NO PADDING -->
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row pagination">
+            {{ pg.page(users,'user.index') }}
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        $(".delete-btn").click(function(){
+            var id = $(this).data('id');
+            var _this = $(this)
+            layer.confirm('确定要删除该用户吗？', {
+              btn: ['删了','取消'] //按钮
+            }, function(){
+                 $.ajax({
+                       type:"POST",
+                       url:"/melon/deleteUser",
+                       data:{id:id},
+                       dataType: "json",
+                       success: function(data){
+                           console.log(data)
+                           if(data.status){
+                               _this.parents('.panel').remove()
+                               layer.closeAll();
+                               layer.msg("删除成功！");
+                               setInterval(function(){
+                                   location.href = location.href;
+                                  }, 2000);
+                           } else {
+                               layer.msg(data.error)
+                           }
+                       }
+                    })
+            }, function(){
+
+            });
+        })
+    </script>
+{%  endblock %}

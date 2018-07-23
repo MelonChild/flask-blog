@@ -1,0 +1,32 @@
+ <!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+        <title>{{ webconfig().webname }}</title>
+        <meta name="keywords" content="{{ webconfig().keywords }}" />
+        <meta name="description" content="{{ webconfig().description }}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{{ url_for('static',filename='index/css/base.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static',filename='index/css/index.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static',filename='index/css/m.css') }}" rel="stylesheet">
+    	<link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static',filename='admin/img/apple-icon.png') }}">
+	    <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static',filename='admin/img/favicon.png') }}">
+        <script src="{{ url_for('static',filename='index/js/jquery.min.js') }}" type="text/javascript"></script>
+        <script src="{{ url_for('static',filename='index/js/jquery.easyfader.min.js') }}"></script>
+        <script src="{{ url_for('static',filename='index/js/scrollReveal.js') }}"></script>
+        <script src="{{ url_for('static',filename='index/js/common.js') }}"></script>
+        <!--[if lt IE 9]>
+        <script src="{{ url_for('static',filename='index/js/modernizr.js') }}"></script>
+        <![endif]-->
+    </head>
+    <body>
+        {% include "index/layout/header.html" %}
+        {% block content %} {% endblock %}
+
+        <footer>
+          <p>Design by <a href="http://www.yangqq.com" target="_blank">Melon</a></p>
+        </footer>
+        <a href="#" class="cd-top">Top</a>
+        </body>
+        {% block script %} {% endblock %}
+</html>

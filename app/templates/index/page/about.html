@@ -1,0 +1,27 @@
+{% extends "index/layout/base.html" %}
+
+{% block content %}
+    <div class="pagebg ab"> </div>
+    <div class="container">
+      <h1 class="t_nav"><span>{{ webconfig().inscription_3 }}</span><a href="{{ url_for('home.index') }}" class="n1">首页</a><a href="#" class="n2">关于我</a></h1>
+      <div class="news_infos">
+        <ul>
+          {{ article.content|safe }}
+        </ul>
+      </div>
+      <div class="sidebar">
+        <div class="about">
+          <p class="avatar"> <img src="{{ url_for('static',filename=webconfig().avatar) }}" alt=""> </p>
+          <p class="abname">{{ webconfig().author }}</p>
+          <p class="abposition">{{ webconfig().position }}</p>
+          <p class="abtext"> {{ webconfig().summary }} </p>
+        </div>
+        <div class="weixin">
+          <h2 class="hometitle">微信关注</h2>
+          <ul>
+            <img src="{{ url_for('static',filename=webconfig().wechat) }}">
+          </ul>
+        </div>
+      </div>
+    </div>
+{% endblock %}

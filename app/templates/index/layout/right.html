@@ -1,0 +1,52 @@
+<div class="tuijian">
+  <h2 class="hometitle">特别推荐</h2>
+  <ul class="tjpic">
+    {% if imagesall|length>0 and imagesall[0] %}
+         {% set imagesall = rightcontnets()['recommends'][0].article.images.split(';') %}
+         {% if imagesall[0] %}
+            <i><img src="{{ url_for('static',filename=imagesall[0]) }}" alt=""></i>
+          {% endif %}
+        <p><a href="{{ url_for('home.blog',id=rightcontnets()['recommends'][0].article.id) }}">{{ rightcontnets()['recommends'][0].article.title }}</a></p>
+    {% endif %}
+  </ul>
+  <ul class="sidenews">
+    {% for recommend in rightcontnets()['recommends'] %}
+        {% if loop.index > 1%}
+             {% set imagesall = recommend.article.images.split(';') %}
+             {% if imagesall[0] %}
+                <li> <i><img src="{{ url_for('static',filename=imagesall[0]) }}" alt=""></i>
+             {% endif %}
+              <p><a href="{{ url_for('home.blog',id=recommend.article.id) }}">{{ recommend.article.title }}</a></p>
+              <span>{{  recommend.article.created_at|datetime }}</span>
+            </li>
+
+        {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+<div class="cloud">
+    <h2 class="hometitle">标签云</h2>
+    <ul>
+      {% for tag in rightcontnets()['tags'] %}
+          {% set images = ''.split(';') %}
+          <a href="{{ url_for('home.search') }}?tag={{ tag.id }}">{{ tag.title }}</a>
+      {% endfor %}
+    </ul>
+</div>
+<div class="links">
+  <h2 class="hometitle">友情链接</h2>
+  <ul>
+      {% for friendlylink in rightcontnets()['friendlylinks'] %}
+         <li><a href="{{ friendlylink.path }}" target="_blank">{{ friendlylink.title }}</a></li>
+      {% endfor %}
+  </ul>
+</div>
+<div class="guanzhu" id="follow-us">
+  <h2 class="hometitle">关注我哦！</h2>
+  <ul>
+    <li class="sina"><a href="https://weibo.com/u/2526519272" target="_blank"><span>新浪微博</span>Melon</a></li>
+    <li class="qq"><a href="mqqwpa://im/chat?chat_type=wpa&uin=294473793&version=1&src_type=web&web_src=oicqzone.com" target="_blank"><span>QQ号</span>294473793</a></li>
+    <li class="email"><a href="mailto:melonchild@outlook.com" target="_blank"><span>邮箱帐号</span>melonchild@outlook.com</a></li>
+    <li class="wx"><img src="{{ url_for('static',filename='index/images/wx.jpg') }}"></li>
+  </ul>
+</div>

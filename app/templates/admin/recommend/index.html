@@ -1,0 +1,144 @@
+{% extends "admin/layout/base.html" %}
+
+{% block style %}
+    <link rel="stylesheet" href="/static/admin/css/jqmain.css">
+{% endblock %}
+
+{% block content %}
+        <div class="row margin-top-10">
+            <div class="col-md-6">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">articles</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>title</th>
+                                    <th>Sort</th>
+                                    <th>Operation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in articles %}
+                                <tr>
+                                    <td>{{ item.id }}</td>
+                                    <td>{{ item.article.title }}</td>
+                                    <td>{{ item.sort }}</td>
+                                    <td>
+                                      <button type="button" class="btn btn-danger delete-btn" data-id="{{ item.id }}"><i class="fa fa-trash-o"></i> Delete</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END BASIC TABLE -->
+            </div>
+            <div class="col-md-6">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Create / Edit</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form method="POST">
+                            <input type="hidden" value="{{ csrf_token() }}" name="csrf_token">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button">Title</button>
+                                </span>
+                                <input class="form-control edit-title" required type="text" id="title" name="title" value="" placeholder="请输入标签">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button">Sort</button>
+                                </span>
+                                <input class="form-control edit-sort" required type="text" name="sort" value="1" placeholder="请输入排序值">
+                            </div>
+                            <br>
+
+                            <button type="submit" class="btn btn-primary"> Submit</button>
+                            <br>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="/static/admin/js/jquery.autocompleter.js"></script>
+    <script type="text/javascript">
+        $(".delete-btn").click(function(){
+            var id = $(this).data('id');
+            var _this = $(this)
+            layer.confirm('确定要删除吗？', {
+              btn: ['删了','取消'] //按钮
+            }, function(){
+                 $.ajax({
+                       type:"POST",
+                       url:"/melon/recommend/delete",
+                       data:{id:id},
+                       dataType: "json",
+                       success: function(data){
+                           console.log(data)
+                           if(data.status){
+                               _this.parents('.panel').remove()
+                               layer.closeAll();
+                               layer.msg("删除成功！");
+                               setInterval(function(){
+                                   location.href = location.href;
+                                  }, 2000);
+                           } else {
+                               layer.msg(data.error)
+                           }
+                       }
+                    })
+            }, function(){
+
+            });
+        })
+        var colors =
+[
+    {
+        "title": "Almond",
+        "author": "(239, 222, 205)"
+    }]
+        {% raw %}
+        $('#title').autocompleter({
+            // marker for autocomplete matches
+            highlightMatches: true,
+
+            // object to local or url to remote search
+            source: "/melon/searchArticle",
+
+            // custom template
+             template: '{{ label }} <span>({{ hex }})</span>',
+
+            // show hint
+            hint: true,
+
+            // abort source if empty field
+            empty: false,
+
+            // max results
+            limit: 5,
+
+            callback: function (value, index, selected) {
+
+                if (selected) {
+                    console.log(value, index, selected)
+                }
+            }
+        });
+        $.autocompleter('clearCache');
+        {% endraw %}
+    </script>
+{%  endblock %}

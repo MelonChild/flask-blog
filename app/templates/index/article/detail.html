@@ -1,0 +1,96 @@
+{% extends "index/layout/base.html" %}
+
+{% block content %}
+    <article>
+      <h1 class="t_nav"><span>您现在的位置是：首页 > {{ currentnav.name }}</span><a href="{{ url_for('home.index') }}" class="n1">网站首页</a><a href="{{ url_for('home.blogs',nav=currentnav.id) }}" class="n2">{{ currentnav.name }}</a></h1>
+      <div class="infosbox">
+        <div class="newsview">
+          <h3 class="news_title">{{ article.title }}</h3>
+          <div class="bloginfo">
+            <ul>
+              <li class="author"><a href="/">{{ article.author }}</a></li>
+              <li class="lmname"><a href="{{ url_for('home.blogs',nav=article.nav_id) }}">{{ article.nav.name}}</a></li>
+              <li class="timer">{{ article.created_at|datetime }}</li>
+              <li class="view">{{ article.views_num }}已阅读</li>
+            </ul>
+          </div>
+          <div class="tags">
+              {% for thetag in article.tags %}
+                <a href="/" target="_blank">{{ thetag.title }}</a>
+              {% endfor %}
+           </div>
+          <div class="news_about"><strong>简介</strong>{{ article.description }}</div>
+          <div class="news_con ck-content">
+              {{ article.content|safe }}
+          </div>
+        </div>
+        <div style="clear: both"></div>
+        <div class="share">
+          <div class="shang_box">
+            <div class="shang_tit">
+              <p>感谢您的支持，我会继续努力哒!</p>
+            </div>
+            <div class="shang_payimg"> <img src="{{ url_for('static',filename='index/images/weipayimg.jpg')}}" alt="扫码支持" title="扫一扫"> </div>
+            <div class="pay_explain">扫码打赏，你说多少就多少</div>
+            <div class="shang_payselect">
+              <div class="pay_item checked" data-id="weipay"> <span class="radiobox"></span> <span class="pay_logo"><img src="{{ url_for('static',filename='index/images/wechat.jpg')}}" alt="微信"></span> </div>
+              <div class="pay_item" data-id="alipay"> <span class="radiobox"></span> <span class="pay_logo"><img src="{{ url_for('static',filename='index/images/alipay.jpg')}}" alt="支付宝"></span> </div>
+
+            </div>
+            <script type="text/javascript">
+                $(function(){
+                    $(".pay_item").click(function(){
+                        $(this).addClass('checked').siblings('.pay_item').removeClass('checked');
+                        var dataid=$(this).attr('data-id');
+                        $(".shang_payimg img").attr("src","/static/index/images/"+dataid+"img.jpg");
+                        $("#shang_pay_txt").text(dataid=="alipay"?"支付宝":"微信");
+                    });
+                });
+            </script>
+          </div>
+            <div class="bshare-custom icon-medium"><a title="分享到微信" class="bshare-weixin"></a><a title="分享到QQ好友" class="bshare-qqim"></a><a title="分享到QQ空间" class="bshare-qzone"></a><a title="分享到新浪微博" class="bshare-sinaminiblog"></a><a title="分享到Facebook" class="bshare-facebook"></a><a title="分享到Twitter" class="bshare-twitter"></a><a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a><span class="BSHARE_COUNT bshare-share-count">0</span></div><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=2&amp;lang=zh"></script><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+        </div>
+        <div class="nextinfo">
+          <p>上一篇：{% if not prev %}<a href="{{ url_for('home.blogs',nav=article.nav_id) }}">返回列表</a> {% else %}<a href="{{ url_for('home.blog',id=prev.id) }}">{{ prev.title }}</a>{% endif %}</p>
+          <p>下一篇：{% if not next %}<a href="{{ url_for('home.blogs',nav=article.nav_id) }}">返回列表</a> {% else %}<a href="{{ url_for('home.blog',id=next.id) }}">{{ next.title }}</a>{% endif %}</p>
+        </div>
+        <div class="otherlink">
+          <h2>相关文章</h2>
+          <ul>
+              {% for relation in relations %}
+                <li><a href="{{ url_for('home.blog',id=relation.id) }}" title="{{ relation.title }}">{{ relation.title }}</a></li>
+              {% endfor %}
+          </ul>
+        </div>
+        <div class="news_pl">
+          <h2>文章评论</h2>
+          <ul>
+            <div class="gbko">
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zODAwNi8xNDUzNg==">
+                    <script type="text/javascript">
+                   (function(d, s) {
+                       var j, e = d.getElementsByTagName(s)[0];
+
+                       if (typeof LivereTower === 'function') { return; }
+
+                       j = d.createElement(s);
+                       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                       j.async = true;
+
+                       e.parentNode.insertBefore(j, e);
+                   })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+            </div>
+          </ul>
+        </div>
+      </div>
+      <div class="sidebar">
+        {% include "index/layout/right.html" %}
+      </div>
+</article>
+<script src="{{ url_for('static',filename='admin/ckeditor5/ckeditor.js') }}"></script>
+{% endblock %}
