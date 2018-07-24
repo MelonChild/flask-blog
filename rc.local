@@ -1,0 +1,4 @@
+#!/bin/bash
+touch /var/lock/subsys/local
+/usr/bin/setterm -blank 0 || true
+

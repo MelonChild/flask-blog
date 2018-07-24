@@ -74,12 +74,12 @@
                             <a id="replaceImg" class="btn btn-success write-title">Choose Images</a>
                         </div>
 
-                        <input type="hidden" name="images" value="{{ images }}" class="setImages">
+                        <input type="text" name="images" value="{{ images }}" class="form-control setImages">
                     </div>
                     <div class="panel-body"  id="image-div">
                         {% for pictureitem in album.pictures %}
                             <div class="input-group">
-                                <img src="/static/{{ pictureitem.path }}" class="activity-icon create-img" >
+                                <img src="{{ pictureitem.path }}" class="activity-icon create-img" >
                                 <a class="btn btn-danger delete-btn" data-value="{{ pictureitem.path }}"><i class="fa fa-trash-o"></i> Delete</a>
                                 <h4>path ：{{ pictureitem.path }}</h4>
                             </div>
@@ -213,7 +213,7 @@
             return false;
         }else{
             var cas = $('#tailoringImg').cropper('getCroppedCanvas');//获取被裁剪后的canvas
-            var base64url = cas.toDataURL('image/png'); //转换为base64地址形式
+            var base64url = cas.toDataURL("image/jpeg",0.6); //转换为base64地址形式
             //上传base64
            $.ajax({
                type:"POST",
@@ -224,7 +224,7 @@
                    console.log(data)
                    if(data.uploaded){
                        var html = '<div class="input-group">\
-                            <img src="/static/'+ data.url + '" class="activity-icon create-img" >\
+                            <img src="'+ data.url + '" class="activity-icon create-img" >\
                             <a class="btn btn-danger delete-btn" data-value="'+ data.url + '"><i class="fa fa-trash-o"></i> Delete</a>\
                             <h4>path ：' + data.url + '</h4>\
                         </div>\

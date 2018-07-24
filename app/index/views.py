@@ -157,8 +157,8 @@ def album(id=1):
     picturesArr = []
     for picture in album.pictures:
         temp['alt'] = album.title
-        temp['src'] = url_for('static',filename=picture.path)
-        temp['thumb'] = url_for('static',filename=picture.path)
+        temp['src'] = picture.path
+        temp['thumb'] = picture.path
         picturesArr.append(temp)
 
     returndata['data'] = picturesArr

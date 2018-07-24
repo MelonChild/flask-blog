@@ -11,7 +11,7 @@
                <li>
                    <div class="shareli">
                        <a class="showalbum" data-value="{{ album.id }}">
-                            <i><img src="{{ url_for('static',filename=album.picture) }}"></i>
+                            <i><img src="{{ album.picture }}"></i>
                             <h2><b>{{ album.title }}</b></h2>
                        </a>
                        <a class="like" data-value="{{ album.id }}">喜欢 | <span class="likenum">{{ album.like_num }}</span></a>

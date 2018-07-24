@@ -27,7 +27,7 @@
                 <div class="profile-header">
                     <div class="overlay"></div>
                     <div class="profile-main">
-                        <img src="{{ url_for('static',filename=web.avatar) }}" style="max-width: 100px;" class="img-circle" alt="Avatar">
+                        <img src="{{ web.avatar }}" style="max-width: 100px;" class="img-circle" alt="Avatar">
                         <h3 class="name">{{ web.author }}</h3>
                         <br>
                         <span class="online-status status-available">{{ web.position }}</span>
@@ -147,13 +147,13 @@
                         </div>
                         <div class="panel-body"  id="image-div">
                             <div class="input-group">
-                                <img src="/static/{{ web.avatar }}" class="activity-icon create-img" >
+                                <img src="{{ web.avatar }}" class="activity-icon create-img" >
                                 <a class="btn btn-danger delete-btn" data-value="{{ web.avatar }}"><i class="fa fa-trash-o"></i> Delete</a>
                                 <h4>path ：{{ web.avatar }}</h4>
                             </div>
                             <br>
                             <div class="input-group">
-                                <img src="/static/{{ web.wechat }}" class="activity-icon create-img" >
+                                <img src="{{ web.wechat }}" class="activity-icon create-img" >
                                 <a class="btn btn-danger delete-btn" data-value="{{ web.wechat }}"><i class="fa fa-trash-o"></i> Delete</a>
                                 <h4>path ：{{ web.wechat }}</h4>
                             </div>
@@ -397,7 +397,7 @@
             return false;
         }else{
             var cas = $('#tailoringImg').cropper('getCroppedCanvas');//获取被裁剪后的canvas
-            var base64url = cas.toDataURL('image/png'); //转换为base64地址形式
+             var base64url = cas.toDataURL("image/jpeg",0.6); //转换为base64地址形式
             //上传base64
            $.ajax({
                type:"POST",
@@ -408,7 +408,7 @@
                    console.log(data)
                    if(data.uploaded){
                        var html = '<div class="input-group">\
-                            <img src="/static/'+ data.url + '" class="activity-icon create-img" >\
+                            <img src="'+ data.url + '" class="activity-icon create-img" >\
                             <a class="btn btn-danger delete-btn" data-value="'+ data.url + '"><i class="fa fa-trash-o"></i> Delete</a>\
                             <h4>path ：' + data.url + '</h4>\
                         </div>\

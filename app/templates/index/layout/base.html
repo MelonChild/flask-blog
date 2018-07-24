@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
         <title>{{ webconfig().webname }}</title>
+		<meta name="baidu-site-verification" content="t93qL6jgc4" />
         <meta name="keywords" content="{{ webconfig().keywords }}" />
         <meta name="description" content="{{ webconfig().description }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,4 +30,14 @@
         <a href="#" class="cd-top">Top</a>
         </body>
         {% block script %} {% endblock %}
+		<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?88a48e8a7630f067914c9df6d6dccc64";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
 </html>

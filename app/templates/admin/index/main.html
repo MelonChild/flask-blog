@@ -31,7 +31,7 @@
                                 <div class="">
                                         {% set imagesall = article.images.split(';') %}
                                         {% if imagesall|length>0 %}
-                                             <img src="{{ url_for('static',filename=imagesall[0]) }}" class="activity-icon blog-img" >
+                                             <img src="{{ imagesall[0] }}" class="activity-icon blog-img" >
                                          {% else %}
                                          {% endif %}
                                         <p class="blog-content">【{{ article.author }}】【{{ article.created_at|datetime }}】{{ article.description }}</p>

@@ -93,7 +93,7 @@
                             <h3 class="page-title write-title">Pictures</h3>
                             <a id="replaceImg" class="btn btn-success write-title">Choose Images</a>
                         </div>
-                        <input type="hidden" name="images" value="" class="setImages">
+                        <input type="text" name="images" value="" class="form-control setImages">
                     </div>
                     <div class="panel-body"  id="image-div">
 
@@ -269,7 +269,7 @@
             return false;
         }else{
             var cas = $('#tailoringImg').cropper('getCroppedCanvas');//获取被裁剪后的canvas
-            var base64url = cas.toDataURL('image/png'); //转换为base64地址形式
+            var base64url = cas.toDataURL("image/jpeg",0.6); //转换为base64地址形式
             //上传base64
            $.ajax({
                type:"POST",
@@ -280,7 +280,7 @@
                    console.log(data)
                    if(data.uploaded){
                        var html = '<div class="input-group">\
-                            <img src="/static/'+ data.url + '" class="activity-icon create-img" >\
+                            <img src="'+ data.url + '" class="activity-icon create-img" >\
                             <a class="btn btn-danger delete-btn" data-value="'+ data.url + '"><i class="fa fa-trash-o"></i> Delete</a>\
                         </div>\
                         <br>';

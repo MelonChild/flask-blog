@@ -4,7 +4,7 @@
     {% if imagesall|length>0 and imagesall[0] %}
          {% set imagesall = rightcontnets()['recommends'][0].article.images.split(';') %}
          {% if imagesall[0] %}
-            <i><img src="{{ url_for('static',filename=imagesall[0]) }}" alt=""></i>
+            <i><img src="{{ imagesall[0] }}" alt=""></i>
           {% endif %}
         <p><a href="{{ url_for('home.blog',id=rightcontnets()['recommends'][0].article.id) }}">{{ rightcontnets()['recommends'][0].article.title }}</a></p>
     {% endif %}
@@ -14,7 +14,7 @@
         {% if loop.index > 1%}
              {% set imagesall = recommend.article.images.split(';') %}
              {% if imagesall[0] %}
-                <li> <i><img src="{{ url_for('static',filename=imagesall[0]) }}" alt=""></i>
+                <li> <i><img src="{{ imagesall[0] }}" alt=""></i>
              {% endif %}
               <p><a href="{{ url_for('home.blog',id=recommend.article.id) }}">{{ recommend.article.title }}</a></p>
               <span>{{  recommend.article.created_at|datetime }}</span>

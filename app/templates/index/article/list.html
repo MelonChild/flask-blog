@@ -14,18 +14,18 @@
          <div class="blogs" data-scroll-reveal="enter bottom over 1s" >
               <h3 class="blogtitle"><a href="{{ url_for('home.blog',id=article.id) }}" target="_blank">{{ article.title }}</a></h3>
              {% set imagesall = article.images.split(';') %}
-             {% if imagesall|length>1 %}
+             {% if imagesall|length>2 %}
                  <span class="bplist">
                     <a href="{{ url_for('home.blog',id=article.id) }}" title="">
                         {% for image in imagesall %}
-                            <li><img src="{{ url_for('static',filename=image) }}" alt=""></li>
+                            <li><img src="{{ image }}" alt=""></li>
                         {% endfor %}
                     </a>
                  </span>
-             {% elif imagesall[0] %}
+             {% elif imagesall|length>0 and imagesall[0] %}
                   <span class="blogpic">
                       <a href="{{ url_for('home.blog',id=article.id) }}" title="">
-                        <img src="{{ url_for('static',filename=imagesall[0]) }}" alt="">
+                        <img src="{{ imagesall[0] }}" alt="">
                       </a>
                   </span>
              {% else %}

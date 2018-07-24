@@ -8,7 +8,7 @@
             <div id="banner" class="fader">
                 {% for banner in banners %}
                     {% if banner.type==1 %}
-                        <li class="slide" ><a href="{{ banner.path }}" target="_blank"><img src="{{ url_for('static',filename=banner.picurl) }}"><span class="imginfo">{{ banner.title }}</span></a></li>
+                        <li class="slide" ><a href="{{ banner.path }}" target="_blank"><img src="{{ banner.picurl }}"><span class="imginfo">{{ banner.title }}</span></a></li>
                     {% endif %}
                 {% endfor %}
               <div class="fader_controls">
@@ -24,8 +24,8 @@
               {% for banner in banners %}
                     {% if banner.type==2 %}
                         <li>
-                            <a href="/" target="_blank">
-                                <i><img src="{{ url_for('static',filename=banner.picurl) }}"></i>
+                            <a href="{{ banner.path }}" target="_blank">
+                                <i><img src="{{ banner.picurl }}"></i>
                                 <h2>{{ banner.title }}</h2>
                                 <span>{{ banner.tag }}</span>
                             </a>
@@ -45,14 +45,14 @@
                          <span class="bplist">
                             <a href="{{ url_for('home.blog',id=article.id) }}" title="">
                                 {% for image in imagesall %}
-                                    <li><img src="{{ url_for('static',filename=image) }}" alt=""></li>
+                                    <li><img src="{{ image }}" alt=""></li>
                                 {% endfor %}
                             </a>
                          </span>
                      {% elif imagesall|length>0 and imagesall[0] %}
                           <span class="blogpic">
                               <a href="{{ url_for('home.blog',id=article.id) }}" title="">
-                                <img src="{{ url_for('static',filename=imagesall[0]) }}" alt="">
+                                <img src="{{ imagesall[0] }}" alt="">
                               </a>
                           </span>
                      {% else %}

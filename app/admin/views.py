@@ -29,7 +29,7 @@ def gen_rnd_filename():
     return '%s%s' % (filename_prefix, str(random.randrange(1000, 10000)))
 
 # 文件重命名，相当于文件移动
-def move_file(filename,dir="images",static="/static/"):
+def move_file(filename,dir="images",static=""):
     newname = filename.replace('temp',dir)
     if filename and filename.find('temp')> -1 and exists('app'+ static + filename):
         os.rename("app" + static + filename, "app" + static + newname)
@@ -68,11 +68,11 @@ def upload():
 
     if request.method == 'POST':
         filename = gen_rnd_filename()
-        filedata = request.values.get('datas','').replace('data:image/png;base64,','');
+        filedata = request.values.get('datas','').replace('data:image/jpeg;base64,','');
         if filedata:
             imgdata = base64.b64decode(filedata)
-            filename = 'uploads/temp/' + filename + '.png'
-            file = open('app/static/' + filename,'wb')
+            filename = '/static/uploads/temp/' + filename + '.jpeg'
+            file = open('app' + filename,'wb')
             file.write(imgdata)
             file.close()
             t['url'] = filename
@@ -94,8 +94,8 @@ def deleteImg():
 
     if request.method == 'POST':
         filedata = request.values.get('img','');
-        if filedata and exists('app/static/'+filedata):
-            os.unlink('app/static/'+filedata)
+        if filedata and exists('app'+filedata):
+            os.unlink('app'+filedata)
             t['status'] = True
         else:
             t['error'] = 'image is not exist'
@@ -160,6 +160,7 @@ def login():
 @admin.route('/')
 @admin_login_req
 def index():
+    return redirect(url_for("admin.main"))
     return render_template('admin/index/index.html')
 
 # 注销
@@ -268,8 +269,8 @@ def deleteArticle():
                 images = article.images.split(';')
                 print(images)
                 for i in images:
-                    if i and exists('app/static/'+i):
-                        os.unlink('app/static/' + i)
+                    if i and exists('app'+i):
+                        os.unlink('app' + i)
 
                 if article.content:
                     demo = re.compile('<img src="(.*?)"', re.S)  # 找到图片正则
@@ -636,8 +637,8 @@ def bannerDel():
             if banner:
                 image = banner.picurl
                 print(image)
-                if image and exists('app/static/' + image):
-                    os.unlink('app/static/' + image)
+                if image and exists('app' + image):
+                    os.unlink('app' + image)
 
                 db.session.delete(banner)
                 db.session.commit()
@@ -765,8 +766,8 @@ def albumsDel():
                 images = album.pictures
                 print(images)
                 for i in images:
-                    if i.path and exists('app/static/'+i.path):
-                        os.unlink('app/static/' + i.path)
+                    if i.path and exists('app'+i.path):
+                        os.unlink('app' + i.path)
 
                 db.session.delete(album)
                 db.session.commit()
@@ -798,7 +799,6 @@ def albumsEdit(id):
         imagesarray.append(pictureitem.path)
 
     print(imagesarray)
-    print( 'index/images/toppic01.jpg' in imagesarray)
     # 提交
     print(form.validate_on_submit())
     print(form.errors)
@@ -822,8 +822,8 @@ def albumsEdit(id):
         for oldimage in imagesarray:
             if oldimage not in imagesdata:
                 print(oldimage)
-                if oldimage and exists('app/static/' + oldimage):
-                    os.unlink('app/static/' + oldimage)
+                if oldimage and exists('app' + oldimage):
+                    os.unlink('app' + oldimage)
 
         # if images:
         for index in range(len(imagesdata)):

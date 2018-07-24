@@ -33,7 +33,7 @@
                         <div class = "slimScrollDiv"  style="display: block;">
                             <div class="panel-body no-padding bg-primary text-center">
                                 <div class="">
-                                        <img src="{{ url_for('static',filename=item.picurl) }}" class="activity-icon blog-img" >
+                                        <img src="{{ item.picurl }}" class="activity-icon blog-img" >
                                         <p class="blog-content">【{% if item.type == 1 %}Banner {% else %}广告{% endif %}】【{{ item.title }}】</p>
                                 </div>
                             </div>
